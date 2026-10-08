@@ -190,6 +190,32 @@ def counterfactual_table(model, dtypes, row, thr):
     return pd.DataFrame(rows)
 
 
+GRS_WORDS = {"Low": "low", "Moderate": "moderate", "High": "high", "Critical": "very high"}
+
+
+def value_text(col, val):
+    if col in OPTION_LABELS:
+        return OPTION_LABELS[col].get(int(val), f"code {int(val)}")
+    if col == "AGEP":
+        return f"{int(val)} years"
+    if col == "WKHP":
+        return f"{int(val)} hours a week"
+    return f"code {int(val)}"
+
+
+def strength(contribution):
+    a = abs(contribution)
+    return "strongly" if a >= 1.0 else "moderately" if a >= 0.4 else "slightly"
+
+
+def check_card(column, ok, title, ok_text, bad_text):
+    with column:
+        if ok:
+            st.success(f"**{title}: OK**\n\n{ok_text}")
+        else:
+            st.warning(f"**{title}: needs attention**\n\n{bad_text}")
+
+
 def applicant_tab(thr, review, weights):
     model, dtypes, X_train, _, _ = load_assets()
     st.write("Enter an applicant using the same fields the model was trained on.")
@@ -201,46 +227,83 @@ def applicant_tab(thr, review, weights):
     eligible = p >= thr
     conf = max(p, 1 - p)
 
-    st.subheader("This applicant's decision")
-    c1, c2, c3, c4 = st.columns(4)
-    c1.metric("Predicted", "Eligible" if eligible else "Not eligible")
-    c2.metric("Probability eligible", f"{p:.1%}")
-    c3.metric("Confidence", f"{conf:.1%}")
-    c4.metric("Human review", "Required" if conf < review else "Not required")
+    st.divider()
+    st.header("Result")
+    with st.expander("Details entered"):
+        st.write(", ".join(f"**{FIELD_NAMES[c]}:** {value_text(c, row[c])}" for c in FEATURE_COLS))
+
+    if eligible:
+        st.success(f"## Likely eligible\nThe model estimates a **{p:.0%}** chance that this applicant meets the "
+                   "eligibility proxy (income above $50,000).")
+    else:
+        st.info(f"## Likely not eligible\nThe model estimates only a **{p:.0%}** chance that this applicant meets "
+                "the eligibility proxy (income above $50,000).")
+    st.progress(p, text=f"Chance of being eligible: {p:.0%}")
+    level = "High" if conf >= 0.85 else "Medium" if conf >= review else "Low"
+    st.write(f"**How sure is the model?** {level} confidence ({conf:.0%}).")
 
     sh, _ = shap_values(model, Xrow)
-    exp = explain_row(sh, Xrow, Xrow.index[0], top=8)
-    exp.index = [FIELD_NAMES[i] for i in exp.index]
-    st.caption("What pushed this decision (log-odds; positive pushes towards eligible)")
-    st.bar_chart(exp["contribution"])
-    st.dataframe(exp.round(3), width="stretch")
+    contrib = sh.iloc[0].sort_values(key=abs, ascending=False)
+    helped = [(f, c) for f, c in contrib.items() if c > 0][:3]
+    hurt = [(f, c) for f, c in contrib.items() if c < 0][:3]
+    st.markdown("### Why this result")
+    left, right = st.columns(2)
+    with left:
+        st.markdown("**Raised the chance of eligibility**")
+        for f, c in helped or [(None, 0)]:
+            st.write(f"- {FIELD_NAMES[f]} ({value_text(f, row[f])}) {strength(c)} raised it" if f else "- Nothing notable")
+    with right:
+        st.markdown("**Lowered the chance of eligibility**")
+        for f, c in hurt or [(None, 0)]:
+            st.write(f"- {FIELD_NAMES[f]} ({value_text(f, row[f])}) {strength(c)} lowered it" if f else "- Nothing notable")
+    with st.expander("See the numbers behind this"):
+        exp = explain_row(sh, Xrow, Xrow.index[0], top=10)
+        exp.index = [FIELD_NAMES[i] for i in exp.index]
+        st.bar_chart(exp["contribution"])
+        st.caption("Positive bars raise the chance of eligibility, negative bars lower it (log-odds scale).")
 
     stab = stability_check(model, dtypes, row, thr)
     cf = counterfactual_table(model, dtypes, row, thr)
     changed = cf[cf.decision_changes]
-    s1, s2 = st.columns(2)
-    s1.metric("Stability", f"{stab:.0%} of nearby inputs give the same decision",
-              help="Age changed by up to 2 years and weekly hours by up to 5.")
-    s2.metric("Decisions that change if only sex or race changes", f"{len(changed)} of {len(cf)}")
-    with st.expander("Counterfactual detail"):
-        st.dataframe(cf.round(3), width="stretch")
-        st.caption("Race group 4 has almost no training data, so its row is unreliable.")
+    conf_ok, stab_ok, fair_ok = conf >= review, stab >= 0.9, len(changed) == 0
 
-    flags = []
-    if conf < review:
-        flags.append("confidence is below the review threshold")
-    if stab < 0.9:
-        flags.append("the decision is unstable for small input changes")
-    if len(changed):
-        flags.append("the decision changes if only sex or race is changed")
-    if flags:
-        st.warning("Recommended handling: refer to a human reviewer because " + "; ".join(flags) + ".")
+    st.markdown("### Safety checks")
+    k1, k2, k3 = st.columns(3)
+    check_card(k1, conf_ok, "Confidence",
+               f"The model is {conf:.0%} sure, above the {review:.0%} review level.",
+               f"The model is only {conf:.0%} sure, below the {review:.0%} review level.")
+    check_card(k2, stab_ok, "Stability",
+               "Small changes to age or weekly hours do not change the decision.",
+               f"The decision changes for {1 - stab:.0%} of small changes to age or weekly hours.")
+    check_card(k3, fair_ok, "Fairness",
+               "Changing only sex or race does not change the decision.",
+               f"The decision would change if only sex or race were different ({len(changed)} of {len(cf)} variations).")
+    with st.expander("What-if detail: change only sex or race"):
+        view = cf.assign(
+            probability=(cf["probability"] * 100).round(0).astype(int).astype(str) + "%",
+            decision_changes=cf["decision_changes"].map({True: "Yes", False: "No"}),
+        ).rename(columns={"change": "What if", "probability": "Chance of eligible",
+                          "decision": "Decision", "decision_changes": "Decision changes?"})
+        st.dataframe(view, hide_index=True, width="stretch")
+        st.caption("Race group 4 has almost no training data, so its rows are unreliable.")
+
+    reasons = [t for ok, t in ((conf_ok, "the model is not confident enough"),
+                               (stab_ok, "the decision is unstable"),
+                               (fair_ok, "the decision depends on sex or race")) if not ok]
+    if reasons:
+        st.warning("**Next step: send to a human reviewer.** Reason: " + "; ".join(reasons) + ".")
     else:
-        st.success("Recommended handling: no decision-level flags. Automated decision is acceptable under these checks.")
+        st.success("**Next step:** no concerns found. The automated decision can stand.")
+    st.caption("Research prototype. 'Eligible' here means income above $50,000, a stand-in for real welfare "
+               "eligibility. This is not an official decision.")
 
-    st.subheader("Model-level audit context")
-    results, _ = test_set_audit()
-    show_grs(results, weights)
+    with st.expander("How trustworthy is the model overall?"):
+        results, _ = test_set_audit()
+        grs = compute_grs(results, weights if sum(weights.values()) > 0 else None)
+        failing = f" Dimensions needing attention: {', '.join(grs.failing)}." if grs.failing else ""
+        st.write(f"Overall governance risk for this model is **{GRS_WORDS[grs.band]}** "
+                 f"(score {grs.score:.2f} of 1).{failing}")
+        show_grs(results, weights)
 
 
 # ------------------------------------------------------------------ batch tab
