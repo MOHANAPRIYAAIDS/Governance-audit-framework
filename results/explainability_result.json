@@ -1,0 +1,139 @@
+{
+  "name": "Explainability",
+  "risk": 0.7952486931318254,
+  "status": "fail",
+  "findings": [
+    "Most influential features: OCCP (26.4%), WKHP (18.8%), AGEP (14.1%).",
+    "Sensitive features ['RAC1P', 'SEX', 'POBP'] carry 12.4% of total SHAP importance (limit 10%). Read with the fairness module: this shows influence, not proof of discrimination.",
+    "8.0% of decisions change when only SEX is changed (limit 5%).",
+    "7.7% of decisions change when only RAC1P is changed (limit 5%)."
+  ],
+  "metrics": {
+    "sensitive_share_total": 0.12415720522403717,
+    "sensitive_features": {
+      "RAC1P": {
+        "share": 0.023351864889264107,
+        "rank": 10
+      },
+      "SEX": {
+        "share": 0.05124497041106224,
+        "rank": 6
+      },
+      "POBP": {
+        "share": 0.049560364335775375,
+        "rank": 7
+      }
+    },
+    "top_features": [
+      [
+        "OCCP",
+        0.26447033882141113
+      ],
+      [
+        "WKHP",
+        0.18780483305454254
+      ],
+      [
+        "AGEP",
+        0.14065782725811005
+      ],
+      [
+        "SCHL",
+        0.12817144393920898
+      ],
+      [
+        "RELSHIPP",
+        0.09235237538814545
+      ]
+    ],
+    "counterfactual": {
+      "SEX": {
+        "any_flip_rate": 0.07952486931318255,
+        "per_value": {
+          "1": 0.0699978108581436,
+          "2": 0.08807069219440354
+        }
+      },
+      "RAC1P": {
+        "any_flip_rate": 0.0769111329641323,
+        "per_value": {
+          "1": 0.032587185012533534,
+          "2": 0.04764221051209296,
+          "3": 0.03945988463555322,
+          "5": 0.03208153949893667,
+          "6": 0.026706514481925413,
+          "7": 0.04443809573280004,
+          "8": 0.04026803607214429,
+          "9": 0.023413451074282516
+        }
+      }
+    },
+    "risks": {
+      "sensitive_share": 0.6207860261201859,
+      "flip_SEX": 0.7952486931318254,
+      "flip_RAC1P": 0.7691113296413229
+    }
+  },
+  "importance": [
+    {
+      "feature": "OCCP",
+      "mean_abs_shap": 1.0591939687728882,
+      "share": 0.26447033882141113,
+      "rank": 1
+    },
+    {
+      "feature": "WKHP",
+      "mean_abs_shap": 0.7521514892578125,
+      "share": 0.18780483305454254,
+      "rank": 2
+    },
+    {
+      "feature": "AGEP",
+      "mean_abs_shap": 0.5633294582366943,
+      "share": 0.14065782725811005,
+      "rank": 3
+    },
+    {
+      "feature": "SCHL",
+      "mean_abs_shap": 0.5133219361305237,
+      "share": 0.12817144393920898,
+      "rank": 4
+    },
+    {
+      "feature": "RELSHIPP",
+      "mean_abs_shap": 0.36986789107322693,
+      "share": 0.09235237538814545,
+      "rank": 5
+    },
+    {
+      "feature": "SEX",
+      "mean_abs_shap": 0.20523422956466675,
+      "share": 0.05124497041106224,
+      "rank": 6
+    },
+    {
+      "feature": "POBP",
+      "mean_abs_shap": 0.19848744571208954,
+      "share": 0.049560364335775375,
+      "rank": 7
+    },
+    {
+      "feature": "COW",
+      "mean_abs_shap": 0.15121452510356903,
+      "share": 0.0377567820250988,
+      "rank": 8
+    },
+    {
+      "feature": "MAR",
+      "mean_abs_shap": 0.09863889217376709,
+      "share": 0.02462916262447834,
+      "rank": 9
+    },
+    {
+      "feature": "RAC1P",
+      "mean_abs_shap": 0.09352336078882217,
+      "share": 0.023351864889264107,
+      "rank": 10
+    }
+  ]
+}

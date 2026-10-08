@@ -1,0 +1,7 @@
+.venv/
+__pycache__/
+.ipynb_checkpoints/
+
+# Downloaded Census data and the processed split; regenerate with notebook 01
+data/
+notebooks/data/

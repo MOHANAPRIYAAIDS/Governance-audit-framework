@@ -1,0 +1,24 @@
+{
+  "name": "Robustness",
+  "risk": 0.37643450208895257,
+  "status": "pass",
+  "findings": [
+    "noise (0.2): accuracy falls 1.1% relative; 5.3% of decisions change.",
+    "missing (0.1): accuracy falls 3.8% relative; 8.5% of decisions change.",
+    "swap (0.05): accuracy falls 1.2% relative; 2.9% of decisions change."
+  ],
+  "metrics": {
+    "baseline_accuracy": 0.81556337663682,
+    "baseline_f1": 0.8085426460711888,
+    "risks": {
+      "noise": 0.11264477233063676,
+      "missing": 0.37643450208895257,
+      "swap": 0.11528901581257552
+    },
+    "moderate_levels": {
+      "noise": 0.2,
+      "missing": 0.1,
+      "swap": 0.05
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "Human oversight",
+  "risk": 0.48160033124579466,
+  "status": "pass",
+  "findings": [
+    "SIMULATED policy: decisions with confidence below 70% go to a human. That reviews 21.3% of decisions and catches 47.8% of the model's errors; 9.6% of all decisions are wrong and unreviewed.",
+    "Not assessed in Phase 1: compliance rate (no policy rules supplied); audit traceability rate (no decision log supplied)."
+  ],
+  "metrics": {
+    "simulated": true,
+    "review_threshold": 0.7,
+    "human_review_rate": 0.21285130169245897,
+    "high_risk_escalation_rate": 0.47776062859548196,
+    "residual_unreviewed_error_rate": 0.09632006624915894,
+    "compliance_rate": null,
+    "audit_traceability_rate": null,
+    "risks": {
+      "residual_error_rate": 0.48160033124579466
+    }
+  }
+}

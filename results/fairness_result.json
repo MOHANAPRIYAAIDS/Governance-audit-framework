@@ -1,0 +1,150 @@
+{
+  "name": "Fairness",
+  "risk": 1.0,
+  "status": "fail",
+  "findings": [
+    "RAC1P: demographic parity difference 0.388 exceeds 0.10 (group 1 selected 61.5%, group 8 selected 22.7%).",
+    "RAC1P: disparate impact ratio 0.369 is below the four-fifths threshold (0.8).",
+    "RAC1P: equal opportunity difference 0.263 exceeds 0.10.",
+    "RAC1P: false-positive-rate difference 0.172 exceeds 0.10.",
+    "RAC1P: groups [4] excluded (fewer than 30 rows); fairness cannot be assessed for them.",
+    "SEX: demographic parity difference 0.104 exceeds 0.10 (group 1 selected 53.4%, group 2 selected 43.0%)."
+  ],
+  "metrics": {
+    "RAC1P": {
+      "demographic_parity_difference": 0.38790777874040616,
+      "disparate_impact_ratio": 0.3694268214955863,
+      "equal_opportunity_difference": 0.26255400415200747,
+      "equalized_odds_fpr_difference": 0.17219469538244958,
+      "highest_selection_group": "1",
+      "lowest_selection_group": "8",
+      "risks": {
+        "demographic_parity_difference": 1.0,
+        "equal_opportunity_difference": 1.0,
+        "equalized_odds_fpr_difference": 0.8609734769122479,
+        "disparate_impact_gap": 1.0
+      },
+      "attribute_risk": 1.0
+    },
+    "SEX": {
+      "demographic_parity_difference": 0.10406916011751083,
+      "disparate_impact_ratio": 0.8049600890980131,
+      "equal_opportunity_difference": 0.04304949362990784,
+      "equalized_odds_fpr_difference": 0.04579992666216162,
+      "highest_selection_group": "1",
+      "lowest_selection_group": "2",
+      "risks": {
+        "demographic_parity_difference": 0.5203458005875541,
+        "equal_opportunity_difference": 0.2152474681495392,
+        "equalized_odds_fpr_difference": 0.2289996333108081,
+        "disparate_impact_gap": 0.4875997772549673
+      },
+      "attribute_risk": 0.5203458005875541
+    }
+  },
+  "group_tables": {
+    "RAC1P": [
+      {
+        "group": 1,
+        "n": 15903,
+        "selection_rate": 0.6151669496321449,
+        "true_rate": 0.5867446393762183,
+        "tpr": 0.8642160540135033,
+        "fpr": 0.2615642118076689,
+        "accuracy": 0.8122366849022197
+      },
+      {
+        "group": 2,
+        "n": 1637,
+        "selection_rate": 0.4257788637751985,
+        "true_rate": 0.43188759926695175,
+        "tpr": 0.7227722772277227,
+        "fpr": 0.2,
+        "accuracy": 0.7666463042150274
+      },
+      {
+        "group": 3,
+        "n": 502,
+        "selection_rate": 0.3107569721115538,
+        "true_rate": 0.34462151394422313,
+        "tpr": 0.630057803468208,
+        "fpr": 0.14285714285714285,
+        "accuracy": 0.7788844621513944
+      },
+      {
+        "group": 4,
+        "n": 1,
+        "selection_rate": 1.0,
+        "true_rate": 1.0,
+        "tpr": 1.0,
+        "fpr": NaN,
+        "accuracy": 1.0
+      },
+      {
+        "group": 5,
+        "n": 84,
+        "selection_rate": 0.2976190476190476,
+        "true_rate": 0.2976190476190476,
+        "tpr": 0.68,
+        "fpr": 0.13559322033898305,
+        "accuracy": 0.8095238095238095
+      },
+      {
+        "group": 6,
+        "n": 7189,
+        "selection_rate": 0.5605786618444847,
+        "true_rate": 0.5431909862289609,
+        "tpr": 0.8489116517285531,
+        "fpr": 0.2177222898903776,
+        "accuracy": 0.8184726665739324
+      },
+      {
+        "group": 7,
+        "n": 139,
+        "selection_rate": 0.3669064748201439,
+        "true_rate": 0.4172661870503597,
+        "tpr": 0.6379310344827587,
+        "fpr": 0.1728395061728395,
+        "accuracy": 0.7482014388489209
+      },
+      {
+        "group": 8,
+        "n": 6706,
+        "selection_rate": 0.22725917089173875,
+        "true_rate": 0.269161944527289,
+        "tpr": 0.6016620498614959,
+        "fpr": 0.08936951642521934,
+        "accuracy": 0.8274679391589621
+      },
+      {
+        "group": 9,
+        "n": 6481,
+        "selection_rate": 0.37802808208609784,
+        "true_rate": 0.38620583243326645,
+        "tpr": 0.7626847782660807,
+        "fpr": 0.1359979889391654,
+        "accuracy": 0.8248727048295016
+      }
+    ],
+    "SEX": [
+      {
+        "group": 1,
+        "n": 20370,
+        "selection_rate": 0.5335787923416789,
+        "true_rate": 0.5239077074128621,
+        "tpr": 0.8313343328335832,
+        "fpr": 0.20591874613322333,
+        "accuracy": 0.8135984290623466
+      },
+      {
+        "group": 2,
+        "n": 18272,
+        "selection_rate": 0.4295096322241681,
+        "true_rate": 0.42885288966725044,
+        "tpr": 0.7882848392036753,
+        "fpr": 0.1601188194710617,
+        "accuracy": 0.8177539404553416
+      }
+    ]
+  }
+}

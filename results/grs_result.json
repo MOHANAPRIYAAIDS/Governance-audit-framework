@@ -1,0 +1,60 @@
+{
+  "grs": 0.557041445422095,
+  "band": "High",
+  "worst_dimension": "Fairness",
+  "failing": [
+    "Fairness",
+    "Explainability"
+  ],
+  "not_assessed": [],
+  "profile": [
+    {
+      "key": "data_quality",
+      "dimension": "Data quality",
+      "risk": 0.3673900796202954,
+      "status": "pass",
+      "weight": 0.16666666666666666,
+      "contribution": 0.061231679936715896
+    },
+    {
+      "key": "fairness",
+      "dimension": "Fairness",
+      "risk": 1.0,
+      "status": "fail",
+      "weight": 0.16666666666666666,
+      "contribution": 0.16666666666666666
+    },
+    {
+      "key": "explainability",
+      "dimension": "Explainability",
+      "risk": 0.791,
+      "status": "fail",
+      "weight": 0.16666666666666666,
+      "contribution": 0.13183333333333333
+    },
+    {
+      "key": "reliability",
+      "dimension": "Reliability",
+      "risk": 0.32582375957752824,
+      "status": "pass",
+      "weight": 0.16666666666666666,
+      "contribution": 0.05430395992958804
+    },
+    {
+      "key": "robustness",
+      "dimension": "Robustness",
+      "risk": 0.37643450208895257,
+      "status": "pass",
+      "weight": 0.16666666666666666,
+      "contribution": 0.06273908368149209
+    },
+    {
+      "key": "oversight",
+      "dimension": "Human oversight",
+      "risk": 0.48160033124579466,
+      "status": "pass",
+      "weight": 0.16666666666666666,
+      "contribution": 0.0802667218742991
+    }
+  ]
+}
