@@ -1,6 +1,6 @@
 # Governance Auditing Framework for AI-Based Social Welfare Eligibility Decision Systems
 
-M.Tech Data Science final year project (Phase 1). Implements a multi-dimensional
+ Implements a multi-dimensional
 governance audit pipeline for an AI-based welfare eligibility classifier:
 
 1. Data Quality
@@ -52,4 +52,3 @@ streamlit run app/dashboard.py
 
 The dashboard has three tabs: a single-applicant form, a CSV upload (add a `label`
 column for the full audit) and the model-level audit with the Governance Risk Score.
-Phase 1 caveats: the label is an income proxy, and the human-oversight module is simulated.
