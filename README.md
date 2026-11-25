@@ -44,7 +44,11 @@ pip install -r requirements.txt
 ## Run order
 
 1. `notebooks/01` to `08`, in order (each saves its result to `results/`)
-2. Dashboard, from the project root:
+2. Optionally run `notebooks/10_fairness_mitigation_experiments.ipynb` to compare
+   protected-feature ablation, proxy-feature screening/ablation, and group-label
+   reweighting. It keeps the original baseline intact and saves comparisons to
+   `results/fairness_mitigation_experiments.json`.
+3. Dashboard, from the project root:
 
 ```bash
 streamlit run app/dashboard.py

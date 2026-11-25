@@ -18,10 +18,9 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score
 
-from ..model import CATEGORICAL_COLS, NUMERIC_COLS
+from ..tasks import INCOME, TaskSpec
 from .common import ModuleResult, risk_from_violation, status_from_risk
 
-VALID_RANGE = {"AGEP": (17, 95), "WKHP": (1, 99)}
 LEVELS = {"noise": [0.1, 0.2, 0.5], "missing": [0.05, 0.10, 0.20], "swap": [0.02, 0.05, 0.10]}
 MODERATE = {"noise": 0.2, "missing": 0.10, "swap": 0.05}
 DESCRIPTIONS = {
@@ -32,17 +31,18 @@ DESCRIPTIONS = {
 DEFAULT_THRESHOLDS = {"relative_degradation": 0.05, "flip_rate": 0.10}
 
 
-def perturb(X: pd.DataFrame, kind: str, level: float, rng: np.random.Generator) -> pd.DataFrame:
+def perturb(X: pd.DataFrame, kind: str, level: float, rng: np.random.Generator,
+            task: TaskSpec = INCOME) -> pd.DataFrame:
     Xp, n = X.copy(), len(X)
     if kind == "noise":
-        for c in NUMERIC_COLS:
-            lo, hi = VALID_RANGE[c]
+        for c in task.numeric_cols:
+            lo, hi = task.valid_range[c]
             Xp[c] = (X[c] + rng.normal(0, level * float(X[c].std()), n)).round().clip(lo, hi)
     elif kind == "missing":
         for c in X.columns:
             Xp.loc[rng.random(n) < level, c] = np.nan
     elif kind == "swap":
-        for c in CATEGORICAL_COLS:
+        for c in task.categorical_cols:
             mask = rng.random(n) < level
             if mask.any():
                 Xp.loc[mask, c] = X[c].to_numpy()[rng.integers(0, n, int(mask.sum()))]
@@ -53,7 +53,7 @@ def perturb(X: pd.DataFrame, kind: str, level: float, rng: np.random.Generator) 
 
 def audit_robustness(
     model, X: pd.DataFrame, y_true=None, levels=None, moderate=None,
-    n_repeats=3, seed=42, decision_threshold=0.5, thresholds=None,
+    n_repeats=3, seed=42, decision_threshold=0.5, thresholds=None, task: TaskSpec = INCOME,
 ) -> ModuleResult:
     levels = levels or LEVELS
     moderate = moderate or MODERATE
@@ -71,7 +71,7 @@ def audit_robustness(
             acc, f1s, flips = [], [], []
             for r in range(n_repeats):
                 rng = np.random.default_rng(seed + 1000 * r + int(level * 1000))
-                pred = (model.predict_proba(perturb(X, kind, level, rng))[:, 1] >= decision_threshold).astype(int)
+                pred = (model.predict_proba(perturb(X, kind, level, rng, task))[:, 1] >= decision_threshold).astype(int)
                 flips.append(float((pred != base).mean()))
                 if labelled:
                     acc.append(accuracy_score(y, pred))

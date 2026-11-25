@@ -1,0 +1,94 @@
+{
+  "name": "Explainability",
+  "risk": 1.0,
+  "status": "fail",
+  "findings": [
+    "Most influential features: MAR (12.9%), ESR (12.9%), DIS (12.5%).",
+    "Sensitive features ['RAC1P', 'SEX', 'DIS', 'CIT', 'NATIVITY'] carry 24.6% of total SHAP importance (limit 10%). Read with the fairness module: this shows influence, not proof of discrimination.",
+    "5.1% of decisions change when only SEX is changed (limit 5%).",
+    "29.9% of decisions change when only RAC1P is changed (limit 5%).",
+    "25.6% of decisions change when only DIS is changed (limit 5%)."
+  ],
+  "metrics": {
+    "sensitive_share_total": 0.24574068188667297,
+    "sensitive_features": {
+      "RAC1P": {
+        "share": 0.05797148495912552,
+        "rank": 7
+      },
+      "SEX": {
+        "share": 0.021266253665089607,
+        "rank": 11
+      },
+      "DIS": {
+        "share": 0.12485948950052261,
+        "rank": 3
+      },
+      "CIT": {
+        "share": 0.041073188185691833,
+        "rank": 9
+      },
+      "NATIVITY": {
+        "share": 0.0005702609196305275,
+        "rank": 18
+      }
+    },
+    "top_features": [
+      [
+        "MAR",
+        0.1285880208015442
+      ],
+      [
+        "ESR",
+        0.12851405143737793
+      ],
+      [
+        "DIS",
+        0.12485948950052261
+      ],
+      [
+        "PINCP",
+        0.11970550566911697
+      ],
+      [
+        "SCHL",
+        0.11606188863515854
+      ]
+    ],
+    "counterfactual": {
+      "SEX": {
+        "any_flip_rate": 0.0512,
+        "per_value": {
+          "1": 0.05296229802513465,
+          "2": 0.04898419864559819
+        }
+      },
+      "RAC1P": {
+        "any_flip_rate": 0.2989,
+        "per_value": {
+          "1": 0.08642708642708642,
+          "2": 0.12151119600976334,
+          "3": 0.09411644743550525,
+          "5": 0.15894039735099338,
+          "6": 0.0941624063726073,
+          "7": 0.10170682730923694,
+          "8": 0.1155746229849194,
+          "9": 0.07253433208489388
+        }
+      },
+      "DIS": {
+        "any_flip_rate": 0.2556,
+        "per_value": {
+          "1": 0.26612041325258284,
+          "2": 0.1994933502216593
+        }
+      }
+    },
+    "risks": {
+      "sensitive_share": 1.0,
+      "flip_SEX": 0.512,
+      "flip_RAC1P": 1.0,
+      "flip_DIS": 1.0
+    }
+  }
+}

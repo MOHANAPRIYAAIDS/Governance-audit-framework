@@ -1,0 +1,63 @@
+{
+  "name": "Fairness",
+  "risk": 1.0,
+  "status": "fail",
+  "findings": [
+    "RAC1P: demographic parity difference 0.311 exceeds 0.10 (group 2.0 selected 50.7%, group 6.0 selected 19.6%).",
+    "RAC1P: disparate impact ratio 0.387 is below the four-fifths threshold (0.8).",
+    "RAC1P: equal opportunity difference 0.329 exceeds 0.10.",
+    "RAC1P: false-positive-rate difference 0.191 exceeds 0.10.",
+    "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them.",
+    "DIS: demographic parity difference 0.521 exceeds 0.10 (group 1.0 selected 74.6%, group 2.0 selected 22.5%).",
+    "DIS: disparate impact ratio 0.301 is below the four-fifths threshold (0.8).",
+    "DIS: equal opportunity difference 0.482 exceeds 0.10.",
+    "DIS: false-positive-rate difference 0.364 exceeds 0.10."
+  ],
+  "metrics": {
+    "RAC1P": {
+      "demographic_parity_difference": 0.3111924389732973,
+      "disparate_impact_ratio": 0.38673627974745023,
+      "equal_opportunity_difference": 0.3286678032594548,
+      "equalized_odds_fpr_difference": 0.19110453180303505,
+      "highest_selection_group": "2.0",
+      "lowest_selection_group": "6.0",
+      "risks": {
+        "demographic_parity_difference": 1.0,
+        "equal_opportunity_difference": 1.0,
+        "equalized_odds_fpr_difference": 0.9555226590151752,
+        "disparate_impact_gap": 1.0
+      },
+      "attribute_risk": 1.0
+    },
+    "SEX": {
+      "demographic_parity_difference": 0.008558614845658397,
+      "disparate_impact_ratio": 0.9724522461565165,
+      "equal_opportunity_difference": 0.0030283185840707105,
+      "equalized_odds_fpr_difference": 0.008366137844550398,
+      "highest_selection_group": "1.0",
+      "lowest_selection_group": "2.0",
+      "risks": {
+        "demographic_parity_difference": 0.04279307422829198,
+        "equal_opportunity_difference": 0.015141592920353553,
+        "equalized_odds_fpr_difference": 0.04183068922275199,
+        "disparate_impact_gap": 0.06886938460870878
+      },
+      "attribute_risk": 0.06886938460870878
+    },
+    "DIS": {
+      "demographic_parity_difference": 0.5213642982393847,
+      "disparate_impact_ratio": 0.3014297944924192,
+      "equal_opportunity_difference": 0.48209746414722715,
+      "equalized_odds_fpr_difference": 0.36418372040621844,
+      "highest_selection_group": "1.0",
+      "lowest_selection_group": "2.0",
+      "risks": {
+        "demographic_parity_difference": 1.0,
+        "equal_opportunity_difference": 1.0,
+        "equalized_odds_fpr_difference": 1.0,
+        "disparate_impact_gap": 1.0
+      },
+      "attribute_risk": 1.0
+    }
+  }
+}

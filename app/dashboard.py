@@ -28,8 +28,9 @@ from src.audit.explainability import explain_row, shap_values
 from src.audit.grs import DIMENSIONS, WEIGHT_SCHEMES, compute_grs, grs_sensitivity
 from src.audit.oversight import DEFAULT_REVIEW_THRESHOLD
 from src.audit.run_all import run_all_audits
-from src.model import FEATURE_COLS, apply_dtypes, build_dtypes, load_processed
+from src.model import FEATURE_COLS, apply_dtypes, build_dtypes, load_processed, parse_binary_label
 
+MAX_BATCH_ROWS = 100_000
 PROCESSED = os.path.join(ROOT, "data", "processed")
 RESULTS = os.path.join(ROOT, "results")
 
@@ -314,17 +315,37 @@ def batch_tab(thr, review, weights):
     up = st.file_uploader("CSV file", type="csv")
     if up is None:
         return
-    df = pd.read_csv(up)
+    try:
+        df = pd.read_csv(up)
+    except Exception as e:
+        st.error(f"The file could not be read as a CSV: {e}")
+        return
+    if len(df) == 0:
+        st.error("The file has no rows.")
+        return
     missing = [c for c in FEATURE_COLS if c not in df.columns]
     if missing:
         st.error("Missing columns: " + ", ".join(missing)
                  + (". Note: use RELSHIPP (2019 and later), not RELP." if "RELSHIPP" in missing else ""))
         return
+    y = None
+    if "label" in df.columns:
+        y, problem = parse_binary_label(df["label"])
+        if problem:
+            st.error(f"Problem with the `label` column: {problem}. Fix it or remove the column.")
+            return
+    if len(df) > MAX_BATCH_ROWS:
+        st.warning(f"Large file: only the first {MAX_BATCH_ROWS:,} rows are used to keep the audit fast.")
+        df = df.head(MAX_BATCH_ROWS)
+        y = y[:MAX_BATCH_ROWS] if y is not None else None
     X = apply_dtypes(df[FEATURE_COLS], dtypes)
-    y = df["label"].astype(int).to_numpy() if "label" in df.columns else None
-    with st.spinner("Auditing..."):
-        results, _, p = run_all_audits(model, X, y_true=y, raw_df=df[FEATURE_COLS],
-                                       review_threshold=review, decision_threshold=thr)
+    try:
+        with st.spinner("Auditing..."):
+            results, _, p = run_all_audits(model, X, y_true=y, raw_df=df[FEATURE_COLS],
+                                           review_threshold=review, decision_threshold=thr)
+    except Exception as e:
+        st.error(f"The audit could not run on this file: {e}")
+        return
     out = df.copy()
     out["probability_eligible"] = p
     out["decision"] = np.where(p >= thr, "Eligible", "Not eligible")
@@ -338,6 +359,8 @@ def batch_tab(thr, review, weights):
     st.download_button("Download predictions", out.to_csv(index=False), "predictions.csv", "text/csv")
     if y is None:
         st.info("No `label` column: fairness, reliability and human-oversight audits need true outcomes and were skipped.")
+    elif results.get("fairness") is None:
+        st.info("Fairness was skipped: it needs at least two race or sex groups with 30 or more people in the file.")
     st.subheader("Audit of this file")
     show_grs(results, weights)
     module_details(results)

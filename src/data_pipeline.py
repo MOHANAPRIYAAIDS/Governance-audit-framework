@@ -112,6 +112,22 @@ def build_income_task(acs_data: pd.DataFrame, year: str = "2022"):
     return features, label, group
 
 
+def build_public_coverage_task(acs_data: pd.DataFrame):
+    """
+    Folktables ACSPublicCoverage: is a person without Medicare age (under 65) and with income
+    of $30,000 or less covered by public health insurance? 19 features, including disability
+    (DIS). Empty answers (for example, school enrolment for adults) are filled with 0 by
+    folktables (its nan_to_num(x, -1) call passes -1 as the `copy` argument, so NaN becomes 0),
+    so structural gaps look like real answers, not missing values.
+    """
+    from folktables import ACSPublicCoverage
+
+    features, label, group = ACSPublicCoverage.df_to_pandas(acs_data)
+    label = label.squeeze("columns").rename("label")
+    group = group.squeeze("columns").rename(PROTECTED_ATTRIBUTE)
+    return features, label, group
+
+
 def clean_features(features: pd.DataFrame) -> pd.DataFrame:
     """
     Cleaning step used to prepare data for model training.

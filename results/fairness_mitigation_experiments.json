@@ -1,0 +1,773 @@
+{
+  "task": "predicting income > $50,000; not insurance eligibility",
+  "sample_counts": {
+    "train": 154566,
+    "test": 38642
+  },
+  "proxy_screen_method": "Univariate mutual information on training data; numeric features were quantile-binned. Association is a screening signal, not proof of proxy use.",
+  "proxy_associations": {
+    "RAC1P": [
+      {
+        "feature": "POBP",
+        "mutual_information": 0.43398370801574443,
+        "protected_entropy_fraction": 0.28794746835757684
+      },
+      {
+        "feature": "OCCP",
+        "mutual_information": 0.11867857048232502,
+        "protected_entropy_fraction": 0.07874303409897124
+      },
+      {
+        "feature": "SCHL",
+        "mutual_information": 0.08535686965589051,
+        "protected_entropy_fraction": 0.05663414102966665
+      },
+      {
+        "feature": "RELSHIPP",
+        "mutual_information": 0.02268018714002694,
+        "protected_entropy_fraction": 0.015048266440015536
+      },
+      {
+        "feature": "AGEP",
+        "mutual_information": 0.014937806011115232,
+        "protected_entropy_fraction": 0.00991120944005847
+      },
+      {
+        "feature": "MAR",
+        "mutual_information": 0.011100569254891016,
+        "protected_entropy_fraction": 0.007365209235361112
+      },
+      {
+        "feature": "COW",
+        "mutual_information": 0.008452680002519768,
+        "protected_entropy_fraction": 0.005608339121048257
+      },
+      {
+        "feature": "WKHP",
+        "mutual_information": 0.006771609303749353,
+        "protected_entropy_fraction": 0.004492951508793738
+      },
+      {
+        "feature": "SEX",
+        "mutual_information": 0.0006898949549246952,
+        "protected_entropy_fraction": 0.00045774415498570667
+      }
+    ],
+    "SEX": [
+      {
+        "feature": "OCCP",
+        "mutual_information": 0.14962802806977837,
+        "protected_entropy_fraction": 0.21628032016582766
+      },
+      {
+        "feature": "WKHP",
+        "mutual_information": 0.012228084870676392,
+        "protected_entropy_fraction": 0.0176751250749055
+      },
+      {
+        "feature": "COW",
+        "mutual_information": 0.010937201942669469,
+        "protected_entropy_fraction": 0.015809214145198276
+      },
+      {
+        "feature": "MAR",
+        "mutual_information": 0.006696212049022699,
+        "protected_entropy_fraction": 0.009679061500332766
+      },
+      {
+        "feature": "SCHL",
+        "mutual_information": 0.004632119588589918,
+        "protected_entropy_fraction": 0.006695512335425736
+      },
+      {
+        "feature": "POBP",
+        "mutual_information": 0.0032587480258198147,
+        "protected_entropy_fraction": 0.004710367940125406
+      },
+      {
+        "feature": "RELSHIPP",
+        "mutual_information": 0.002458560554162114,
+        "protected_entropy_fraction": 0.003553734354858188
+      },
+      {
+        "feature": "RAC1P",
+        "mutual_information": 0.0006898949549246957,
+        "protected_entropy_fraction": 0.0009972109079878983
+      },
+      {
+        "feature": "AGEP",
+        "mutual_information": 0.0001626200001790118,
+        "protected_entropy_fraction": 0.00023505960853591914
+      }
+    ]
+  },
+  "proxy_candidates_removed": [
+    "POBP",
+    "OCCP"
+  ],
+  "reweighing_method": "Group-label reweighing applied separately to RAC1P and SEX, using training rows only.",
+  "shap_note": "TreeSHAP contributions are on the log-odds scale. Positive signed SHAP pushes toward the >$50,000 class; summaries use a deterministic test sample.",
+  "variants": {
+    "baseline": {
+      "dropped_features": [],
+      "reweighing_attribute": null,
+      "performance": {
+        "accuracy": 0.81556337663682,
+        "precision": 0.8040284233584442,
+        "recall": 0.8131078452561055,
+        "f1": 0.8085426460711888,
+        "roc_auc": 0.8962504172122422
+      },
+      "fairness": {
+        "RAC1P": {
+          "demographic_parity_difference": 0.38790777874040616,
+          "disparate_impact_ratio": 0.3694268214955863,
+          "equal_opportunity_difference": 0.26255400415200747,
+          "equalized_odds_fpr_difference": 0.17219469538244958,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "8.0",
+          "risks": {
+            "demographic_parity_difference": 1.0,
+            "equal_opportunity_difference": 1.0,
+            "equalized_odds_fpr_difference": 0.8609734769122479,
+            "disparate_impact_gap": 1.0
+          },
+          "attribute_risk": 1.0
+        },
+        "SEX": {
+          "demographic_parity_difference": 0.10406916011751083,
+          "disparate_impact_ratio": 0.8049600890980131,
+          "equal_opportunity_difference": 0.04304949362990784,
+          "equalized_odds_fpr_difference": 0.04579992666216162,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "2.0",
+          "risks": {
+            "demographic_parity_difference": 0.5203458005875541,
+            "equal_opportunity_difference": 0.2152474681495392,
+            "equalized_odds_fpr_difference": 0.2289996333108081,
+            "disparate_impact_gap": 0.4875997772549673
+          },
+          "attribute_risk": 0.5203458005875541
+        }
+      },
+      "fairness_risk": 1.0,
+      "fairness_status": "fail",
+      "fairness_findings": [
+        "RAC1P: demographic parity difference 0.388 exceeds 0.10 (group 1.0 selected 61.5%, group 8.0 selected 22.7%).",
+        "RAC1P: disparate impact ratio 0.369 is below the four-fifths threshold (0.8).",
+        "RAC1P: equal opportunity difference 0.263 exceeds 0.10.",
+        "RAC1P: false-positive-rate difference 0.172 exceeds 0.10.",
+        "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them.",
+        "SEX: demographic parity difference 0.104 exceeds 0.10 (group 1.0 selected 53.4%, group 2.0 selected 43.0%)."
+      ],
+      "counterfactual_flip_rates": {
+        "SEX": {
+          "any_flip_rate": 0.07952486931318255,
+          "per_value": {
+            "1": 0.0699978108581436,
+            "2": 0.08807069219440354
+          }
+        },
+        "RAC1P": {
+          "any_flip_rate": 0.0769111329641323,
+          "per_value": {
+            "1": 0.032587185012533534,
+            "2": 0.04764221051209296,
+            "3": 0.03945988463555322,
+            "5": 0.03208153949893667,
+            "6": 0.026706514481925413,
+            "7": 0.04443809573280004,
+            "8": 0.04026803607214429,
+            "9": 0.023413451074282516
+          }
+        }
+      },
+      "sensitive_feature_importance_share": 0.12476672774943652,
+      "shap_direction_summary": [
+        {
+          "feature": "OCCP",
+          "mean_absolute_shap": 1.0662449598312378,
+          "mean_signed_shap": -0.05518439784646034,
+          "positive_contribution_share": 0.4822,
+          "negative_contribution_share": 0.5178
+        },
+        {
+          "feature": "WKHP",
+          "mean_absolute_shap": 0.7533457279205322,
+          "mean_signed_shap": -0.08494427800178528,
+          "positive_contribution_share": 0.7062,
+          "negative_contribution_share": 0.2938
+        },
+        {
+          "feature": "AGEP",
+          "mean_absolute_shap": 0.564247727394104,
+          "mean_signed_shap": -0.1395903378725052,
+          "positive_contribution_share": 0.6306,
+          "negative_contribution_share": 0.3694
+        },
+        {
+          "feature": "SCHL",
+          "mean_absolute_shap": 0.5205588936805725,
+          "mean_signed_shap": -0.002760476665571332,
+          "positive_contribution_share": 0.4228,
+          "negative_contribution_share": 0.5772
+        },
+        {
+          "feature": "RELSHIPP",
+          "mean_absolute_shap": 0.3681270480155945,
+          "mean_signed_shap": -0.054397277534008026,
+          "positive_contribution_share": 0.6294,
+          "negative_contribution_share": 0.3706
+        },
+        {
+          "feature": "SEX",
+          "mean_absolute_shap": 0.20438852906227112,
+          "mean_signed_shap": 0.00026883254759013653,
+          "positive_contribution_share": 0.5126,
+          "negative_contribution_share": 0.4874
+        },
+        {
+          "feature": "POBP",
+          "mean_absolute_shap": 0.20274797081947327,
+          "mean_signed_shap": 0.02724246308207512,
+          "positive_contribution_share": 0.639,
+          "negative_contribution_share": 0.361
+        },
+        {
+          "feature": "COW",
+          "mean_absolute_shap": 0.14989061653614044,
+          "mean_signed_shap": 0.004535777494311333,
+          "positive_contribution_share": 0.5436,
+          "negative_contribution_share": 0.4564
+        },
+        {
+          "feature": "MAR",
+          "mean_absolute_shap": 0.09674550592899323,
+          "mean_signed_shap": -0.012076722458004951,
+          "positive_contribution_share": 0.536,
+          "negative_contribution_share": 0.464
+        },
+        {
+          "feature": "RAC1P",
+          "mean_absolute_shap": 0.09452877193689346,
+          "mean_signed_shap": -0.004199294839054346,
+          "positive_contribution_share": 0.5492,
+          "negative_contribution_share": 0.4508
+        }
+      ]
+    },
+    "without_protected_features": {
+      "dropped_features": [
+        "RAC1P",
+        "SEX"
+      ],
+      "reweighing_attribute": null,
+      "performance": {
+        "accuracy": 0.8133119403757569,
+        "precision": 0.8018494761599316,
+        "recall": 0.8105143721633888,
+        "f1": 0.80615864144454,
+        "roc_auc": 0.8939942079015055
+      },
+      "fairness": {
+        "RAC1P": {
+          "demographic_parity_difference": 0.36574106189816624,
+          "disparate_impact_ratio": 0.39851291547398787,
+          "equal_opportunity_difference": 0.2376814425212952,
+          "equalized_odds_fpr_difference": 0.1522300714214484,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "8.0",
+          "risks": {
+            "demographic_parity_difference": 1.0,
+            "equal_opportunity_difference": 1.0,
+            "equalized_odds_fpr_difference": 0.761150357107242,
+            "disparate_impact_gap": 1.0
+          },
+          "attribute_risk": 1.0
+        },
+        "SEX": {
+          "demographic_parity_difference": 0.0678093138152584,
+          "disparate_impact_ratio": 0.868637591781568,
+          "equal_opportunity_difference": 0.005353850639764346,
+          "equalized_odds_fpr_difference": 0.01102881573144851,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "2.0",
+          "risks": {
+            "demographic_parity_difference": 0.339046569076292,
+            "equal_opportunity_difference": 0.02676925319882173,
+            "equalized_odds_fpr_difference": 0.05514407865724255,
+            "disparate_impact_gap": 0.3284060205460801
+          },
+          "attribute_risk": 0.339046569076292
+        }
+      },
+      "fairness_risk": 1.0,
+      "fairness_status": "fail",
+      "fairness_findings": [
+        "RAC1P: demographic parity difference 0.366 exceeds 0.10 (group 1.0 selected 60.8%, group 8.0 selected 24.2%).",
+        "RAC1P: disparate impact ratio 0.399 is below the four-fifths threshold (0.8).",
+        "RAC1P: equal opportunity difference 0.238 exceeds 0.10.",
+        "RAC1P: false-positive-rate difference 0.152 exceeds 0.10.",
+        "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them."
+      ],
+      "counterfactual_flip_rates": {},
+      "sensitive_feature_importance_share": 0.05878357959518323,
+      "shap_direction_summary": [
+        {
+          "feature": "OCCP",
+          "mean_absolute_shap": 1.0728691816329956,
+          "mean_signed_shap": -0.055808067321777344,
+          "positive_contribution_share": 0.4826,
+          "negative_contribution_share": 0.5174
+        },
+        {
+          "feature": "WKHP",
+          "mean_absolute_shap": 0.7728037238121033,
+          "mean_signed_shap": -0.08968452364206314,
+          "positive_contribution_share": 0.705,
+          "negative_contribution_share": 0.295
+        },
+        {
+          "feature": "AGEP",
+          "mean_absolute_shap": 0.5722141861915588,
+          "mean_signed_shap": -0.145870640873909,
+          "positive_contribution_share": 0.6158,
+          "negative_contribution_share": 0.3842
+        },
+        {
+          "feature": "SCHL",
+          "mean_absolute_shap": 0.5332836508750916,
+          "mean_signed_shap": 0.0035653000231832266,
+          "positive_contribution_share": 0.4248,
+          "negative_contribution_share": 0.5752
+        },
+        {
+          "feature": "RELSHIPP",
+          "mean_absolute_shap": 0.3631366789340973,
+          "mean_signed_shap": -0.0514993891119957,
+          "positive_contribution_share": 0.629,
+          "negative_contribution_share": 0.371
+        },
+        {
+          "feature": "POBP",
+          "mean_absolute_shap": 0.2235894501209259,
+          "mean_signed_shap": 0.020469145849347115,
+          "positive_contribution_share": 0.6416,
+          "negative_contribution_share": 0.3584
+        },
+        {
+          "feature": "COW",
+          "mean_absolute_shap": 0.14578524231910706,
+          "mean_signed_shap": -0.00044781790347769856,
+          "positive_contribution_share": 0.5276,
+          "negative_contribution_share": 0.4724
+        },
+        {
+          "feature": "MAR",
+          "mean_absolute_shap": 0.1199217438697815,
+          "mean_signed_shap": -0.01061263307929039,
+          "positive_contribution_share": 0.5248,
+          "negative_contribution_share": 0.4752
+        }
+      ]
+    },
+    "without_protected_features_and_top_proxy_candidates": {
+      "dropped_features": [
+        "OCCP",
+        "POBP",
+        "RAC1P",
+        "SEX"
+      ],
+      "reweighing_attribute": null,
+      "performance": {
+        "accuracy": 0.781041353967186,
+        "precision": 0.7641861688140942,
+        "recall": 0.7851199481305381,
+        "f1": 0.774511632865176,
+        "roc_auc": 0.8646726847455096
+      },
+      "fairness": {
+        "RAC1P": {
+          "demographic_parity_difference": 0.3498104721100421,
+          "disparate_impact_ratio": 0.41570886062745505,
+          "equal_opportunity_difference": 0.27729205755814157,
+          "equalized_odds_fpr_difference": 0.1720940641759207,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "8.0",
+          "risks": {
+            "demographic_parity_difference": 1.0,
+            "equal_opportunity_difference": 1.0,
+            "equalized_odds_fpr_difference": 0.8604703208796035,
+            "disparate_impact_gap": 1.0
+          },
+          "attribute_risk": 1.0
+        },
+        "SEX": {
+          "demographic_parity_difference": 0.03055504149589855,
+          "disparate_impact_ratio": 0.9396776317821813,
+          "equal_opportunity_difference": 0.02806330372332977,
+          "equalized_odds_fpr_difference": 0.018664353391946165,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "2.0",
+          "risks": {
+            "demographic_parity_difference": 0.15277520747949275,
+            "equal_opportunity_difference": 0.14031651861664884,
+            "equalized_odds_fpr_difference": 0.09332176695973082,
+            "disparate_impact_gap": 0.15080592054454667
+          },
+          "attribute_risk": 0.15277520747949275
+        }
+      },
+      "fairness_risk": 1.0,
+      "fairness_status": "fail",
+      "fairness_findings": [
+        "RAC1P: demographic parity difference 0.350 exceeds 0.10 (group 1.0 selected 59.9%, group 8.0 selected 24.9%).",
+        "RAC1P: disparate impact ratio 0.416 is below the four-fifths threshold (0.8).",
+        "RAC1P: equal opportunity difference 0.277 exceeds 0.10.",
+        "RAC1P: false-positive-rate difference 0.172 exceeds 0.10.",
+        "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them."
+      ],
+      "counterfactual_flip_rates": {},
+      "sensitive_feature_importance_share": 0.0,
+      "shap_direction_summary": [
+        {
+          "feature": "SCHL",
+          "mean_absolute_shap": 0.8477937579154968,
+          "mean_signed_shap": -0.0068713896907866,
+          "positive_contribution_share": 0.4234,
+          "negative_contribution_share": 0.5766
+        },
+        {
+          "feature": "WKHP",
+          "mean_absolute_shap": 0.8245294690132141,
+          "mean_signed_shap": -0.08026698976755142,
+          "positive_contribution_share": 0.7088,
+          "negative_contribution_share": 0.2912
+        },
+        {
+          "feature": "AGEP",
+          "mean_absolute_shap": 0.5105079412460327,
+          "mean_signed_shap": -0.15685898065567017,
+          "positive_contribution_share": 0.6454,
+          "negative_contribution_share": 0.3546
+        },
+        {
+          "feature": "RELSHIPP",
+          "mean_absolute_shap": 0.40225455164909363,
+          "mean_signed_shap": -0.04016014561057091,
+          "positive_contribution_share": 0.6802,
+          "negative_contribution_share": 0.3198
+        },
+        {
+          "feature": "COW",
+          "mean_absolute_shap": 0.13544507324695587,
+          "mean_signed_shap": -0.00019770226208493114,
+          "positive_contribution_share": 0.5674,
+          "negative_contribution_share": 0.4326
+        },
+        {
+          "feature": "MAR",
+          "mean_absolute_shap": 0.11860530823469162,
+          "mean_signed_shap": -0.015628760680556297,
+          "positive_contribution_share": 0.541,
+          "negative_contribution_share": 0.459
+        }
+      ]
+    },
+    "reweighted_by_RAC1P": {
+      "dropped_features": [],
+      "reweighing_attribute": "RAC1P",
+      "performance": {
+        "accuracy": 0.807282231768542,
+        "precision": 0.7914624505928853,
+        "recall": 0.811432893883726,
+        "f1": 0.8013232665475015,
+        "roc_auc": 0.8889543044098597
+      },
+      "fairness": {
+        "RAC1P": {
+          "demographic_parity_difference": 0.23098358432653493,
+          "disparate_impact_ratio": 0.5956706723671013,
+          "equal_opportunity_difference": 0.13308622722183006,
+          "equalized_odds_fpr_difference": 0.05739019500637871,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "8.0",
+          "risks": {
+            "demographic_parity_difference": 1.0,
+            "equal_opportunity_difference": 0.6654311361091503,
+            "equalized_odds_fpr_difference": 0.28695097503189354,
+            "disparate_impact_gap": 1.0
+          },
+          "attribute_risk": 1.0
+        },
+        "SEX": {
+          "demographic_parity_difference": 0.11912271295395949,
+          "disparate_impact_ratio": 0.7823740212670713,
+          "equal_opportunity_difference": 0.05674364196156134,
+          "equalized_odds_fpr_difference": 0.06525520310937258,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "2.0",
+          "risks": {
+            "demographic_parity_difference": 0.5956135647697974,
+            "equal_opportunity_difference": 0.2837182098078067,
+            "equalized_odds_fpr_difference": 0.32627601554686286,
+            "disparate_impact_gap": 0.5440649468323216
+          },
+          "attribute_risk": 0.5956135647697974
+        }
+      },
+      "fairness_risk": 1.0,
+      "fairness_status": "fail",
+      "fairness_findings": [
+        "RAC1P: demographic parity difference 0.231 exceeds 0.10 (group 1.0 selected 57.1%, group 8.0 selected 34.0%).",
+        "RAC1P: disparate impact ratio 0.596 is below the four-fifths threshold (0.8).",
+        "RAC1P: equal opportunity difference 0.133 exceeds 0.10.",
+        "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them.",
+        "SEX: demographic parity difference 0.119 exceeds 0.10 (group 1.0 selected 54.7%, group 2.0 selected 42.8%).",
+        "SEX: disparate impact ratio 0.782 is below the four-fifths threshold (0.8)."
+      ],
+      "counterfactual_flip_rates": {
+        "SEX": {
+          "any_flip_rate": 0.08638269240722529,
+          "per_value": {
+            "1": 0.07410245183887916,
+            "2": 0.09739813451153657
+          }
+        },
+        "RAC1P": {
+          "any_flip_rate": 0.13091972465193313,
+          "per_value": {
+            "1": 0.07212278464312415,
+            "2": 0.0501553844075125,
+            "3": 0.06253277399056109,
+            "5": 0.07471860573681208,
+            "6": 0.05478014815756844,
+            "7": 0.04656779991169519,
+            "8": 0.0904621743486974,
+            "9": 0.0649544479338329
+          }
+        }
+      },
+      "sensitive_feature_importance_share": 0.15962088934082544,
+      "shap_direction_summary": [
+        {
+          "feature": "OCCP",
+          "mean_absolute_shap": 1.0368366241455078,
+          "mean_signed_shap": -0.0849730521440506,
+          "positive_contribution_share": 0.4672,
+          "negative_contribution_share": 0.5328
+        },
+        {
+          "feature": "WKHP",
+          "mean_absolute_shap": 0.8176000714302063,
+          "mean_signed_shap": -0.06527392566204071,
+          "positive_contribution_share": 0.7088,
+          "negative_contribution_share": 0.2912
+        },
+        {
+          "feature": "AGEP",
+          "mean_absolute_shap": 0.5591426491737366,
+          "mean_signed_shap": -0.1398840993642807,
+          "positive_contribution_share": 0.6338,
+          "negative_contribution_share": 0.3662
+        },
+        {
+          "feature": "SCHL",
+          "mean_absolute_shap": 0.48281729221343994,
+          "mean_signed_shap": 0.019371313974261284,
+          "positive_contribution_share": 0.4334,
+          "negative_contribution_share": 0.5666
+        },
+        {
+          "feature": "RELSHIPP",
+          "mean_absolute_shap": 0.37839967012405396,
+          "mean_signed_shap": -0.04740692302584648,
+          "positive_contribution_share": 0.6384,
+          "negative_contribution_share": 0.3616
+        },
+        {
+          "feature": "RAC1P",
+          "mean_absolute_shap": 0.25836747884750366,
+          "mean_signed_shap": -0.01157473586499691,
+          "positive_contribution_share": 0.3702,
+          "negative_contribution_share": 0.6298
+        },
+        {
+          "feature": "SEX",
+          "mean_absolute_shap": 0.20552192628383636,
+          "mean_signed_shap": -0.0022735679522156715,
+          "positive_contribution_share": 0.5152,
+          "negative_contribution_share": 0.4848
+        },
+        {
+          "feature": "POBP",
+          "mean_absolute_shap": 0.20408552885055542,
+          "mean_signed_shap": 0.02164492756128311,
+          "positive_contribution_share": 0.629,
+          "negative_contribution_share": 0.371
+        },
+        {
+          "feature": "COW",
+          "mean_absolute_shap": 0.14162054657936096,
+          "mean_signed_shap": 0.009256373159587383,
+          "positive_contribution_share": 0.557,
+          "negative_contribution_share": 0.443
+        },
+        {
+          "feature": "MAR",
+          "mean_absolute_shap": 0.10036709159612656,
+          "mean_signed_shap": -0.013279522769153118,
+          "positive_contribution_share": 0.5384,
+          "negative_contribution_share": 0.4616
+        }
+      ]
+    },
+    "reweighted_by_SEX": {
+      "dropped_features": [],
+      "reweighing_attribute": "SEX",
+      "performance": {
+        "accuracy": 0.8137518761968843,
+        "precision": 0.8031301924210752,
+        "recall": 0.8095958504430516,
+        "f1": 0.8063500605408315,
+        "roc_auc": 0.8949085634032402
+      },
+      "fairness": {
+        "RAC1P": {
+          "demographic_parity_difference": 0.3951625421332756,
+          "disparate_impact_ratio": 0.3595974821618789,
+          "equal_opportunity_difference": 0.28056770821118415,
+          "equalized_odds_fpr_difference": 0.17600566692203745,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "8.0",
+          "risks": {
+            "demographic_parity_difference": 1.0,
+            "equal_opportunity_difference": 1.0,
+            "equalized_odds_fpr_difference": 0.8800283346101873,
+            "disparate_impact_gap": 1.0
+          },
+          "attribute_risk": 1.0
+        },
+        "SEX": {
+          "demographic_parity_difference": 0.05866112965308168,
+          "disparate_impact_ratio": 0.8851031527852621,
+          "equal_opportunity_difference": 0.0037639583730340043,
+          "equalized_odds_fpr_difference": 0.0015548522844878732,
+          "highest_selection_group": "1.0",
+          "lowest_selection_group": "2.0",
+          "risks": {
+            "demographic_parity_difference": 0.2933056482654084,
+            "equal_opportunity_difference": 0.01881979186517002,
+            "equalized_odds_fpr_difference": 0.007774261422439366,
+            "disparate_impact_gap": 0.2872421180368448
+          },
+          "attribute_risk": 0.2933056482654084
+        }
+      },
+      "fairness_risk": 1.0,
+      "fairness_status": "fail",
+      "fairness_findings": [
+        "RAC1P: demographic parity difference 0.395 exceeds 0.10 (group 1.0 selected 61.7%, group 8.0 selected 22.2%).",
+        "RAC1P: disparate impact ratio 0.360 is below the four-fifths threshold (0.8).",
+        "RAC1P: equal opportunity difference 0.281 exceeds 0.10.",
+        "RAC1P: false-positive-rate difference 0.176 exceeds 0.10.",
+        "RAC1P: groups [4.0] excluded (fewer than 30 rows); fairness cannot be assessed for them."
+      ],
+      "counterfactual_flip_rates": {
+        "SEX": {
+          "any_flip_rate": 0.03822265928264582,
+          "per_value": {
+            "1": 0.03228984238178634,
+            "2": 0.04354442808051055
+          }
+        },
+        "RAC1P": {
+          "any_flip_rate": 0.07528078256819005,
+          "per_value": {
+            "1": 0.03346673116671797,
+            "2": 0.04939872990136468,
+            "3": 0.04402202412165705,
+            "5": 0.028580320556045438,
+            "6": 0.02403586303373287,
+            "7": 0.04539905981352103,
+            "8": 0.040205410821643285,
+            "9": 0.022169708653337894
+          }
+        }
+      },
+      "sensitive_feature_importance_share": 0.09288539661213163,
+      "shap_direction_summary": [
+        {
+          "feature": "OCCP",
+          "mean_absolute_shap": 1.0367181301116943,
+          "mean_signed_shap": -0.08512618392705917,
+          "positive_contribution_share": 0.4728,
+          "negative_contribution_share": 0.5272
+        },
+        {
+          "feature": "WKHP",
+          "mean_absolute_shap": 0.7427836656570435,
+          "mean_signed_shap": -0.09098677337169647,
+          "positive_contribution_share": 0.7064,
+          "negative_contribution_share": 0.2936
+        },
+        {
+          "feature": "SCHL",
+          "mean_absolute_shap": 0.5899847745895386,
+          "mean_signed_shap": 0.023274578154087067,
+          "positive_contribution_share": 0.4226,
+          "negative_contribution_share": 0.5774
+        },
+        {
+          "feature": "AGEP",
+          "mean_absolute_shap": 0.5520206093788147,
+          "mean_signed_shap": -0.1337299793958664,
+          "positive_contribution_share": 0.6286,
+          "negative_contribution_share": 0.3714
+        },
+        {
+          "feature": "RELSHIPP",
+          "mean_absolute_shap": 0.38275450468063354,
+          "mean_signed_shap": -0.049163226038217545,
+          "positive_contribution_share": 0.6566,
+          "negative_contribution_share": 0.3434
+        },
+        {
+          "feature": "POBP",
+          "mean_absolute_shap": 0.20344476401805878,
+          "mean_signed_shap": 0.022636456415057182,
+          "positive_contribution_share": 0.6326,
+          "negative_contribution_share": 0.3674
+        },
+        {
+          "feature": "COW",
+          "mean_absolute_shap": 0.15340013802051544,
+          "mean_signed_shap": 0.0012025207979604602,
+          "positive_contribution_share": 0.5306,
+          "negative_contribution_share": 0.4694
+        },
+        {
+          "feature": "MAR",
+          "mean_absolute_shap": 0.1120629608631134,
+          "mean_signed_shap": -0.014766737818717957,
+          "positive_contribution_share": 0.5368,
+          "negative_contribution_share": 0.4632
+        },
+        {
+          "feature": "RAC1P",
+          "mean_absolute_shap": 0.09316471219062805,
+          "mean_signed_shap": -0.003131910227239132,
+          "positive_contribution_share": 0.5522,
+          "negative_contribution_share": 0.4478
+        },
+        {
+          "feature": "SEX",
+          "mean_absolute_shap": 0.06891798973083496,
+          "mean_signed_shap": 0.0014638175489380956,
+          "positive_contribution_share": 0.5072,
+          "negative_contribution_share": 0.4928
+        }
+      ]
+    }
+  }
+}
